@@ -1,0 +1,329 @@
+/*
+ * Author: Ayan Shabbir
+ * Course: COP 3503
+ * Project #: 1
+ * Title: Word Statistics
+ * Due Date: 06/09/2024
+ * 
+ * Finds different statistical values for list of names   
+*/
+import java.util.Scanner;
+import java.util.Arrays;
+
+/**
+ * Perform operations for list of names 
+ */
+public class Project1{	
+/**
+ * Main method runs program
+ * @param args Command-line argument
+ */
+	
+public static void main(String[] args) {
+ //Scanner & variables declaration
+ Scanner scnr = new Scanner(System.in);
+ String[] names = null;
+ //Get user input
+ System.out.println("Enter List of Names Separated by Commas:");
+ String input = scnr.nextLine();
+ 
+ //Splits names in array names when comma is read
+ names = input.split(",\\s*");
+  
+ while(true) {
+     //Chose a selection
+     System.out.println("Please make a selection: ");
+     System.out.println("1) Display List Ordered");
+     System.out.println("2) Display Full Names");
+     System.out.println("3) Display Single Names");
+     System.out.println("4) Display Name Statistics");
+     System.out.println("5) Display Names with Even Length");
+     System.out.println("6) Display Names with Odd Length");
+     System.out.println("7) Display Names not Capitalized");
+     System.out.println("8) Display Most Frequent Names");
+     System.out.println("9) Enter new list of Names");
+     System.out.println("0) Quit Program");
+     
+	 int choice = scnr.nextInt();
+	 scnr.nextLine();
+	 
+	 //Switch-case for menu 
+	 switch (choice) {
+     case 1:
+         displayListOrdered(names);
+         break;
+     case 2:
+         displayFullNames(names);
+         break;
+     case 3:
+         displaySingleNames(names);
+         break;
+     case 4:
+         displayNameStatistics(names);
+         break;
+     case 5:
+         displayNamesWithEvenLength(names);
+         break;
+     case 6:
+         displayNamesWithOddLength(names);
+         break;
+     case 7:
+         displayNamesNotCapitalized(names);
+         break;
+     case 8:
+         displayMostFrequentName(names);
+         break;
+     case 9:
+         names = enterNewListOfNames(scnr);
+         break;
+     case 0:
+    //Displays option 0 print statement to user 
+    System.out.println("Exiting program. Goodbye!");
+         scnr.close();
+         return;
+     default:
+         System.out.println("Invalid option. Please try again.");
+ }//end switch
+}//end while 
+}//end main method 
+
+/**
+ * Displays list of names in alphabetical order 
+ * @param names Array names 
+ */
+public static void displayListOrdered(String[] names) {
+
+if (names == null || names.length == 0) {
+ System.out.println("List is empty.");
+ return;
+}//end if 
+
+//Sort names and print sorted list
+Arrays.sort(names, String.CASE_INSENSITIVE_ORDER);
+System.out.println(Arrays.toString(names));
+}//end method
+
+/**
+ * Displays names containing space (full names)
+ * @param names Array names 
+ */
+public static void displayFullNames(String[] names) {
+if (names == null || names.length == 0) {
+ System.out.println("List is empty.");
+ return;
+}//end if
+//Prints names containing a space
+for (String name : names) {
+ if (name.contains(" ")) {
+     System.out.println(name);
+ }//end if 
+}//end for
+}//end method
+
+/**
+ * Displays names without a space (single names)
+ * @param names Array names 
+ */
+public static void displaySingleNames(String[] names) {
+	
+if (names == null || names.length == 0) {
+ System.out.println("List is empty.");
+ return;
+}//end if
+
+//Prints names that do not contain space
+for (String name : names) {
+ if (!name.contains(" ")) {
+     System.out.println(name);
+ }//end if
+}//end for
+}//end method
+
+/**
+ * Displays various statistics about the name
+ * @param names Array names
+ */
+public static void displayNameStatistics(String[] names) {
+if (names == null || names.length == 0) {
+ System.out.println("List is empty.");
+ return;
+}//end if 
+
+//variable declarations for statistics
+int totalCount = names.length;
+int totalLetters = 0;
+int shortestLength = Integer.MAX_VALUE;
+int longestLength = Integer.MIN_VALUE;
+
+//Iterate through names Array to calculate total letters
+for (String name : names) {
+ //calculate total letters
+ totalLetters += name.replaceAll("[ ,.]", "").length();
+ int length = name.replaceAll("[ ,.]", "").length();
+ //calculate shortest length
+ shortestLength = Math.min(shortestLength, length);
+ //calculate longest length
+ longestLength = Math.max(longestLength, length);
+}//end for
+
+//calculate average length
+double averageLength = (double) totalLetters / totalCount;
+
+double sumSquares = 0;
+
+//Calculate sumofSquares
+for (String name : names) {
+ int length = name.replaceAll("[ ,.]", "").length();
+ sumSquares += Math.pow(length - averageLength, 2);
+}//end for
+
+//calculate standard deviation
+double standardDeviation = Math.sqrt(sumSquares / totalCount);
+
+//print out statistics 
+System.out.println("Name Count: " + totalCount);
+System.out.println("Letter Count Total: " + totalLetters);
+System.out.println("Avg Name Length: " + String.format("%.2f", averageLength));
+System.out.println("Shortest Name: " + shortestName(names, shortestLength));
+System.out.println("Longest Name: " + longestName(names, longestLength));
+System.out.println("Population Standard Deviation: " + String.format("%.2f", standardDeviation));
+}//end method
+
+/**
+ * Find shortest name in list
+ * @param names Array names 
+ * @param length of shortest name
+ * @return shortest name 
+ */
+private static String shortestName(String[] names, int length) {
+for (String name : names) {
+ //ignores space, comma, and periods from names
+ if (name.replaceAll("[ ,.]", "").length() == length) {
+	 //return shortest name
+     return name;
+ }//end if
+}//end for 
+return "";
+}//end method
+
+/**
+ * Finds longest name in list
+ * @param names Array names
+ * @param length of longest name
+ * @return longest name
+ */
+private static String longestName(String[] names, int length) {
+for (String name : names) {
+ //ignores space, comma, and periods from names
+ if (name.replaceAll("[ ,.]", "").length() == length) {
+	 //returns longest name
+     return name;
+ }//end if
+}//end for
+return "";
+}//end method
+
+/**
+ * Displays names with even length 
+ * @param names Array names 
+ */
+public static void displayNamesWithEvenLength(String[] names) {
+if (names == null || names.length == 0) {
+ System.out.println("List is empty.");
+ return;
+}//end if
+
+//calculate even length of name 
+for (String name : names) {
+ if (name.replaceAll("[ ,.]", "").length() % 2 == 0) {
+     System.out.println(name);
+ }//end if
+}//end for
+}//end method
+
+/**
+ * displays names with odd length
+ * @param names Array names
+ */
+public static void displayNamesWithOddLength(String[] names) {
+if (names == null || names.length == 0) {
+ System.out.println("List is empty.");
+ return;
+}
+//calculate odd length of name 
+for (String name : names) {
+ if (name.replaceAll("[ ,.]", "").length() % 2 != 0) {
+     System.out.println(name);
+ }//end if
+}//end for
+}//end method
+
+/**
+ * Display names not capitalized 
+ * @param names Array names
+ */
+public static void displayNamesNotCapitalized(String[] names) {
+if (names == null || names.length == 0) {
+ System.out.println("List is empty.");
+ return;
+}
+
+//calculate if name is upper case 
+for (String name : names) {
+ if (!Character.isUpperCase(name.charAt(0))) {
+     System.out.println(name);
+ }//end if
+}//end for 
+}//end method 
+
+/**
+ * Display name that is most frequent
+ * @param names Array names
+ */
+public static void displayMostFrequentName(String[] names) {
+if (names == null || names.length == 0) {
+ System.out.println("List is empty.");
+ return;
+}
+
+//create variables
+int maxFrequency = 0;
+String mostFrequentName = null;
+
+//Loop through name list  
+for (int i = 0; i < names.length; i++) {
+ //initialize current name frequency to 1
+ int frequency = 1;
+ 
+ //check for duplicates, if name appears multiple time iterate frequency
+ for (int j = i + 1; j < names.length; j++) {
+     if (names[i].equalsIgnoreCase(names[j])) {
+         frequency++;
+     }//end if
+ }//end for
+ 
+ //calculate and display most frequent name
+ if (frequency > maxFrequency) {
+     maxFrequency = frequency;
+     mostFrequentName = names[i];
+ }//end if 
+}//end for
+
+if (mostFrequentName == null) {
+ System.out.println("No Most Frequent Name");
+}//end if 
+else {
+ System.out.println("Most Frequent Name: " + mostFrequentName);
+}//end else
+}//end method
+/**
+ * Asks user to enter new list of names
+ * @param scnr Scanner object to read user input
+ * @return list of names entered by user
+ */
+public static String[] enterNewListOfNames(Scanner scnr) {
+System.out.println("Enter List of Names Separated by Commas:");
+String input = scnr.nextLine();
+return input.split(",\\s*");
+}//end method
+}//end class
